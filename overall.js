@@ -46,7 +46,7 @@ const round = (n, dp) => {
 const grouped = data.data
   .map((x) => ({ id: x.node.id, year: new Date(x.list_status.finish_date).getFullYear(), score: x.list_status.score }))
   .reduce((acc, title) => {
-    const { year, score } = title;
+    const { year = 'unspecified', score = 'unspecified' } = title;
     const item = { score };
     const itemsPerYear = acc[year];
     return { ...acc, [year]: itemsPerYear ? [...itemsPerYear, item] : [item] };
@@ -61,6 +61,9 @@ const matrix = Object.entries(grouped).reduce((acc, [year, titles], index) => {
   return [...acc, row];
 }, []);
 
-const table = new AsciiTable3().setHeading('Year', 'Delta', 'Total', 'Mean Score').setStyle('unicode-round').addRowMatrix(matrix);
+const table = new AsciiTable3()
+  .setHeading('Year', 'Delta', 'Total', 'Mean Score')
+  .setStyle('unicode-round')
+  .addRowMatrix(matrix);
 
 console.log(table.toString());
